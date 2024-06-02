@@ -1,0 +1,18 @@
+__pycache__/  
+**/logs/
+*.swp
+logs/
+wandb/
+results/*
+!results/convert_jsonl_to_txt.py
+test.sh
+
+# checkpoints
+models/*/
+model/checkpoint
+
+# evaluation
+evaluation/**/*.jsonl
+
+# archived
+archived/
