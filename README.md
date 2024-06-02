@@ -1,11 +1,59 @@
-# readqg
-The training/inference/evaluation codes for ReadQG.
+# ReadQG: relevance-aware diverse query generation
+---
+This repo is for the training/inference/evaluation codes of ReadQG.
+The further training/evaluation codes of reranker, please refer to [crossencoder](https://github.com/DylanJoo/crossencoder-readqg)
 
-## Document-centric pairs 
-We first built a document-centric pairs from MSMARCO Passage ranking dataset.
-We use the pseudo labels calculated by SBERT: [hard-negative](cross-encoder-ms-marco-MiniLM-L-6-v2-scores.pkl.gz). More details can be found in [Huggingface](https://huggingface.co/datasets/sentence-transformers/msmarco-hard-negatives)
+---
+## Preliminary
+### Datasets 
+**Training**
+- Document-centric pairs 
+- MSMARCO Passage Ranking:
+We download the passage collection and queries from [official repo](https://microsoft.github.io/msmarco/Datasets)
 
-This preprocessing code include (1) document-centric aggregation amd (2) rescaling with MinMax.
+**Predict**
+- Out-of-domain corpus: 
+we download the corpus from [BEIR repository](https://github.com/beir-cellar/beir).
+
+## Preliminary
+### Training
+You should replace the data/model path in scripts. The argument description will be updated soon.
+
+1. Simple MLE
+```
+bash mle.sh
+```
+
+2. MLE + Self-contrast
+```
+bash selfcontrast.sh
+```
+
+3. MLE + Self-contrast + Calibration (rank or margin)
+```
+bash calibrate.sh
+```
+
+### Generation
+In the following example, we use `calibrate_margin` as an example. Please refere to [generate.py](generate.py) for more details. The argument description will be updated soon.
+```
+bash run_generation.sh
+```
+
+### Evaluation
+This include our proposed model-based evaluation metrics.
+Please refere to [evaluate.py](evaluate.py) and [evaluation](evaluation/) for more details. The argument description will be updated soon.
+```
+bash run_evaluation.sh
+```
+
+
+---
+### Appendix: creating document-centric paris from scratch
+You can still create a new one from scratch or using other pseudo-relevance.  
+> We use the pseudo labels calculated by SBERT: [hard-negative](cross-encoder-ms-marco-MiniLM-L-6-v2-scores.pkl.gz). More details can be found in [Huggingface](https://huggingface.co/datasets/sentence-transformers/msmarco-hard-negatives)
+
+The preprocessing includes (1) document-centric aggregation and (2) rescaling with MinMax.
 ```
 python src/data/nils.py \
   --input_pkl <hard-negative.pkl> \
@@ -24,4 +72,3 @@ Here is an example:
     "negative_score": [0.5019643744555538, 0.48854984330862333, 0.48256438933225276, 0.48065411202876335, 0.4775776822910094, 0.3258133069202288, 0.3125255552925462, 0.30954225698795557, 0.2606488628335376, 0.2474956552307656]
 }
 ```
-
